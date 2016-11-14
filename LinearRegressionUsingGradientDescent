@@ -1,0 +1,63 @@
+# I live near Meghaloy ^_^
+# Linear Regression single variable
+
+
+from numpy import *
+import matplotlib.pyplot as plt
+
+def compute_error(theta_zero, theta_one, data):
+    total_error = 0
+    for i in range(0, len(data)):
+        x = data[i, 0]
+        y = data[i, 1]
+        total_error += (y - (theta_zero + theta_one * x)) ** 2
+
+    return total_error / float(len(data))
+
+def step_gradient(theta_zero_now, theta_one_now, alpha, data):
+    theta_zero_next = 0
+    theta_one_next = 0
+    m = float(len(data))
+    for i in range(0, len(data)):
+        x = data[i, 0]
+        y = data[i, 1]
+        theta_zero_next += ((-1) * (2 / m)) * (-(theta_zero_now + theta_one_now * x) + (y))
+        theta_one_next += ((-1) * (2 / m)) * (-(theta_zero_now + theta_one_now * x) + (y)) * x
+    theta_zero_next = theta_zero_now - alpha * theta_zero_next
+    theta_one_next = theta_one_now - alpha * theta_one_next
+
+    return [theta_zero_next, theta_one_next]
+
+def run_iteration_times(theta_zero_initial, theta_one_initial, alpha, data, iteration_number):
+    theta_zero = theta_zero_initial
+    theta_one = theta_one_initial
+
+    for i in range(iteration_number):
+        theta_zero, theta_one = step_gradient(theta_zero, theta_one, alpha, array(data))
+    return [theta_zero, theta_one]
+
+def start():
+    data = genfromtxt("co_ordinates.txt", delimiter=',')
+    alpha = 0.0001
+    theta_zero_initial = 0
+    theta_one_initial = 0
+    iteration_number = 1000
+
+    print "initiating learning at theta_zero = {0}, theta_one = {1}, learning rate(alpha) = {2}, error = {3}".format(theta_zero_initial, theta_one_initial, alpha, compute_error(theta_zero_initial, theta_one_initial, data))
+
+    [theta_zero, theta_one] = run_iteration_times(theta_zero_initial, theta_one_initial, alpha, data, iteration_number)
+
+    print "After {0} iterations finally minimized parameter theta_zero = {1}, theta_one = {2}, error = {3}".format(iteration_number, theta_zero, theta_one, compute_error(theta_zero, theta_one, data))
+
+
+if __name__ == '__main__':
+    start()
+
+
+
+
+
+
+
+
+
